@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final checkVersion = CheckVersion(context: context);
     final appStatus = await checkVersion.getVersionStatus();
     if (appStatus.canUpdate) {
-      checkVersion.showUpdateDialog("com.companyName.appName", "id0123456789");
+      checkVersion.showUpdateDialog(appStatus.appStoreUrl);
     }
     print("canUpdate ${appStatus.canUpdate}");
     print("localVersion ${appStatus.localVersion}");
