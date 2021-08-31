@@ -120,7 +120,7 @@ class CheckVersion {
     String message = "You can now update this app from store.",
     String titleText = 'Update Available',
     String dismissText = 'Later',
-    String updateText = 'Update Now',
+    String updateText = 'Update',
   }) async {
     Text title = Text(titleText);
     final content = Text(message);
