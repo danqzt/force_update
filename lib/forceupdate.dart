@@ -122,11 +122,18 @@ class CheckVersion {
     String dismissText = 'Later',
     String updateText = 'Update',
   }) async {
-    Text title = Text(titleText);
-    final content = Text(message);
-    Text dismiss = Text(dismissText);
+    Text title = Text(titleText,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        textAlign: TextAlign.center);
+    final content = Text(message, style: TextStyle(color: Colors.black));
+    Text dismiss = Text(dismissText, style: TextStyle(color: Colors.black));
     final dismissAction = () => Navigator.pop(context);
-    Text update = Text(updateText);
+    Text update = Text(
+      updateText,
+      style: TextStyle(color: Colors.black),
+    );
     final updateAction = () {
       _launchAppStore(appStoreurl);
       Navigator.pop(context);
@@ -137,8 +144,8 @@ class CheckVersion {
       builder: (BuildContext context) {
         return platform == TargetPlatform.iOS
             ? CupertinoAlertDialog(
-                title: title,
-                content: content,
+                title: Center(child: title),
+                content: Center(child: content),
                 actions: <Widget>[
                   CupertinoDialogAction(
                     child: dismiss,
@@ -151,22 +158,26 @@ class CheckVersion {
                 ],
               )
             : AlertDialog(
-                title: title,
-                content: content,
+                title: Center(child: title),
+                content: Center(child: content),
                 backgroundColor: Colors.white,
                 actions: <Widget>[
-                  FlatButton(
-                    child: dismiss,
-                    onPressed: dismissAction,
-                    color: Colors.orange[800],
-                    textColor: Colors.white,
-                  ),
-                  FlatButton(
-                    child: update,
-                    onPressed: updateAction,
-                    color: Colors.orange[800],
-                    textColor: Colors.white,
-                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RaisedButton(
+                          child: dismiss,
+                          onPressed: dismissAction,
+                          color: Colors.grey,
+                          textColor: Colors.white,
+                        ),
+                        RaisedButton(
+                          child: update,
+                          onPressed: updateAction,
+                          color: Colors.orange[800],
+                          textColor: Colors.white,
+                        ),
+                      ])
                 ],
               );
       },
