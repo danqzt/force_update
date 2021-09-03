@@ -120,19 +120,20 @@ class CheckVersion {
     String message = "You can now update this app from store.",
     String titleText = 'Update Available',
     String dismissText = 'Later',
-    String updateText = 'Update',
+    String updateText = 'Update Now',
   }) async {
     Text title = Text(titleText,
         style: TextStyle(
           color: Colors.black,
         ),
         textAlign: TextAlign.center);
-    final content = Text(message, style: TextStyle(color: Colors.black));
-    Text dismiss = Text(dismissText, style: TextStyle(color: Colors.black));
+    final content = Text(message,
+        style: TextStyle(color: Colors.black), textAlign: TextAlign.center);
+    Text dismiss = Text(dismissText, style: TextStyle(color: Colors.white));
     final dismissAction = () => Navigator.pop(context);
     Text update = Text(
       updateText,
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(color: Colors.white),
     );
     final updateAction = () {
       _launchAppStore(appStoreurl);
@@ -158,27 +159,31 @@ class CheckVersion {
                 ],
               )
             : AlertDialog(
-                title: Center(child: title),
-                content: Center(child: content),
+                title: title,
                 backgroundColor: Colors.white,
-                actions: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RaisedButton(
-                          child: dismiss,
-                          onPressed: dismissAction,
-                          color: Colors.grey,
-                          textColor: Colors.white,
-                        ),
-                        RaisedButton(
-                          child: update,
-                          onPressed: updateAction,
-                          color: Colors.orange[800],
-                          textColor: Colors.white,
-                        ),
-                      ])
-                ],
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      child: content,
+                      padding: EdgeInsets.only(bottom: 10),
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          RaisedButton(
+                            child: dismiss,
+                            onPressed: dismissAction,
+                            color: Colors.grey,
+                          ),
+                          RaisedButton(
+                            child: update,
+                            onPressed: updateAction,
+                            color: Colors.orange[800],
+                          ),
+                        ])
+                  ],
+                ),
               );
       },
     );
