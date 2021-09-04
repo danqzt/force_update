@@ -39,8 +39,9 @@ class _MyHomePageState extends State<MyHomePage> {
   checkVersion() async {
     final checkVersion = CheckVersion(context: context);
     final appStatus = await checkVersion.getVersionStatus();
-    if (appStatus.canUpdate) {
-      checkVersion.showUpdateDialog(appStatus.appStoreUrl);
+    if (true) {
+      checkVersion.showUpdaterDialog(
+          "https://play.google.com/store/apps/details?id=net.pelita.app&hl=en_AU&gl=US");
     }
     print("canUpdate ${appStatus.canUpdate}");
     print("localVersion ${appStatus.localVersion}");
