@@ -146,18 +146,28 @@ class CheckVersion {
         return platform == TargetPlatform.iOS
             ? CupertinoAlertDialog(
                 title: Center(child: title),
-                content: Center(child: content),
-                actions: <Widget>[
-                  CupertinoDialogAction(
-                    child: dismiss,
-                    onPressed: dismissAction,
-                  ),
-                  CupertinoDialogAction(
-                    child: update,
-                    onPressed: updateAction,
-                  ),
-                ],
-              )
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      child: content,
+                      padding: EdgeInsets.only(bottom: 10),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        CupertinoDialogAction(
+                          child: dismiss,
+                          onPressed: dismissAction,
+                        ),
+                        CupertinoDialogAction(
+                          child: update,
+                          onPressed: updateAction,
+                        )
+                      ],
+                    )
+                  ],
+                ))
             : AlertDialog(
                 title: title,
                 backgroundColor: Colors.white,
