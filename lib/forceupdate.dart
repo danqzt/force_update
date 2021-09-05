@@ -1,5 +1,6 @@
 library forceupdate;
 
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -24,8 +25,7 @@ class CheckVersion {
   String androidId;
   String iOSId;
 
-  CheckVersion({this.androidId, this.iOSId, @required this.context})
-      : assert(context != null);
+  CheckVersion({this.androidId, this.iOSId, @required this.context}) : assert(context != null);
 
   Future<AppVersionStatus> getVersionStatus({bool checkInBigger = true}) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -74,16 +74,12 @@ class CheckVersion {
   alertIfAvailable(String androidApplicationId, String iOSAppId) async {
     AppVersionStatus versionStatus = await getVersionStatus();
     if (versionStatus != null && versionStatus.canUpdate) {
-      showUpdaterDialog(versionStatus.appStoreUrl,
-          versionStatus: versionStatus);
+      showUpdaterDialog(versionStatus.appStoreUrl, versionStatus: versionStatus);
     }
   }
 
-  getiOSAtStoreVersion(
-      String appId /**app id in apple store not app bundle id*/,
-      AppVersionStatus versionStatus) async {
-    final response =
-        await http.get('http://itunes.apple.com/lookup?bundleId=$appId');
+  getiOSAtStoreVersion(String appId /**app id in apple store not app bundle id*/, AppVersionStatus versionStatus) async {
+    final response = await http.get('http://itunes.apple.com/lookup?bundleId=$appId');
     if (response.statusCode != 200) {
       print('The app with id: $appId is not found in app store');
       return null;
@@ -95,13 +91,11 @@ class CheckVersion {
   }
 
   getAndroidAtStoreVersion(
-      String applicationId /**application id, generally stay in build.gradle*/,
-      AppVersionStatus versionStatus) async {
+      String applicationId /**application id, generally stay in build.gradle*/, AppVersionStatus versionStatus) async {
     final url = 'https://play.google.com/store/apps/details?id=$applicationId';
     final response = await http.get(url);
     if (response.statusCode != 200) {
-      print(
-          'The app with application id: $applicationId is not found in play store');
+      print('The app with application id: $applicationId is not found in play store');
       return null;
     }
     final document = html.parse(response.body);
@@ -127,8 +121,7 @@ class CheckVersion {
           color: Colors.black,
         ),
         textAlign: TextAlign.center);
-    final content = Text(message,
-        style: TextStyle(color: Colors.black), textAlign: TextAlign.center);
+    final content = Text(message, style: TextStyle(color: Colors.black), textAlign: TextAlign.center);
     Text dismiss = Text(dismissText, style: TextStyle(color: Colors.white));
     final dismissAction = () => Navigator.pop(context);
     Text update = Text(
@@ -141,33 +134,26 @@ class CheckVersion {
     };
     final platform = Theme.of(context).platform;
     showDialog(
-      context: context,
+      context: this.context,
       builder: (BuildContext context) {
         return platform == TargetPlatform.iOS
-            ? CupertinoAlertDialog(
-                title: Center(child: title),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      child: content,
-                      padding: EdgeInsets.only(bottom: 10),
+            ? Theme(
+                data: ThemeData.light(),
+                child: CupertinoAlertDialog(
+                  title: Center(child: Text(titleText)),
+                  content: Text(message),
+                  actions: <Widget>[
+                    CupertinoDialogAction(
+                      child: Text(dismissText),
+                      onPressed: dismissAction,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        CupertinoDialogAction(
-                          child: dismiss,
-                          onPressed: dismissAction,
-                        ),
-                        CupertinoDialogAction(
-                          child: update,
-                          onPressed: updateAction,
-                        )
-                      ],
-                    )
+                    CupertinoDialogAction(
+                      child: Text(updateText),
+                      onPressed: updateAction,
+                    ),
                   ],
-                ))
+                ),
+              )
             : AlertDialog(
                 title: title,
                 backgroundColor: Colors.white,
@@ -178,20 +164,18 @@ class CheckVersion {
                       child: content,
                       padding: EdgeInsets.only(bottom: 10),
                     ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          RaisedButton(
-                            child: dismiss,
-                            onPressed: dismissAction,
-                            color: Colors.grey,
-                          ),
-                          RaisedButton(
-                            child: update,
-                            onPressed: updateAction,
-                            color: Colors.orange[800],
-                          ),
-                        ])
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
+                      RaisedButton(
+                        child: dismiss,
+                        onPressed: dismissAction,
+                        color: Colors.grey,
+                      ),
+                      RaisedButton(
+                        child: update,
+                        onPressed: updateAction,
+                        color: Colors.orange[800],
+                      ),
+                    ])
                   ],
                 ),
               );
