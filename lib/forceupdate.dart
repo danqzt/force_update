@@ -61,7 +61,8 @@ class CheckVersion {
       }
     }
 
-    for (int i = 0; i < storeVersion.length - 1; i++) {
+    //only do minor version
+    for (int i = 0; i < 2; i++) {
       if (int.parse(storeVersion[i]) > int.parse(currentVersion[i])) {
         versionStatus.canUpdate = true;
         return versionStatus;
