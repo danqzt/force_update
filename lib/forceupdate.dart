@@ -61,7 +61,7 @@ class CheckVersion {
       }
     }
 
-    for (int i = 0; i < storeVersion.length; i++) {
+    for (int i = 0; i < storeVersion.length - 1; i++) {
       if (int.parse(storeVersion[i]) > int.parse(currentVersion[i])) {
         versionStatus.canUpdate = true;
         return versionStatus;
@@ -112,9 +112,9 @@ class CheckVersion {
     String appStoreurl, {
     AppVersionStatus versionStatus,
     String message = "You can now update this app from store.",
-    String titleText = 'Update Available',
-    String dismissText = 'Later',
-    String updateText = 'Update Now',
+    String titleText = 'Update Tersedia',
+    String dismissText = 'Tunda',
+    String updateText = 'Update',
   }) async {
     Text title = Text(titleText,
         style: TextStyle(
