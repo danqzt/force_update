@@ -1,35 +1,34 @@
 library forceupdate;
 
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:convert';
 import 'dart:async';
-import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppVersionStatus {
-  bool canUpdate;
-  String localVersion;
-  String storeVersion;
-  String appStoreUrl;
+  bool? canUpdate;
+  String? localVersion;
+  String? storeVersion;
+  String? appStoreUrl;
   AppVersionStatus({this.canUpdate, this.localVersion, this.storeVersion});
 }
 
 class CheckVersion {
   BuildContext context;
-  String androidId;
-  String iOSId;
+  String? androidId;
+  String? iOSId;
 
-  CheckVersion({this.androidId, this.iOSId, @required this.context}) : assert(context != null);
+  CheckVersion({this.androidId, this.iOSId, required this.context});
 
-  Future<AppVersionStatus> getVersionStatus({bool checkInBigger = true}) async {
+  Future<AppVersionStatus?> getVersionStatus({bool checkInBigger = true}) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    AppVersionStatus versionStatus = AppVersionStatus(
+    AppVersionStatus? versionStatus = AppVersionStatus(
       localVersion: packageInfo.version,
     );
     switch (Theme.of(context).platform) {
@@ -47,8 +46,8 @@ class CheckVersion {
     if (versionStatus == null) {
       return null;
     }
-    List storeVersion = versionStatus.storeVersion.split(".");
-    List currentVersion = versionStatus.localVersion.split(".");
+    List storeVersion = versionStatus.storeVersion!.split(".");
+    List currentVersion = versionStatus.localVersion!.split(".");
     if (storeVersion.length < currentVersion.length) {
       int missValues = currentVersion.length - storeVersion.length;
       for (int i = 0; i < missValues; i++) {
@@ -73,14 +72,14 @@ class CheckVersion {
   }
 
   alertIfAvailable(String androidApplicationId, String iOSAppId) async {
-    AppVersionStatus versionStatus = await getVersionStatus();
-    if (versionStatus != null && versionStatus.canUpdate) {
-      showUpdaterDialog(versionStatus.appStoreUrl, versionStatus: versionStatus);
+    AppVersionStatus? versionStatus = await getVersionStatus();
+    if (versionStatus != null && versionStatus.canUpdate == true) {
+      showUpdaterDialog(versionStatus.appStoreUrl!, versionStatus: versionStatus);
     }
   }
 
   getiOSAtStoreVersion(String appId /**app id in apple store not app bundle id*/, AppVersionStatus versionStatus) async {
-    final response = await http.get('http://itunes.apple.com/lookup?bundleId=$appId');
+    final response = await http.get('http://itunes.apple.com/lookup?bundleId=$appId' as Uri);
     if (response.statusCode != 200) {
       print('The app with id: $appId is not found in app store');
       return null;
@@ -94,7 +93,7 @@ class CheckVersion {
   getAndroidAtStoreVersion(
       String applicationId /**application id, generally stay in build.gradle*/, AppVersionStatus versionStatus) async {
     final url = 'https://play.google.com/store/apps/details?id=$applicationId';
-    final response = await http.get(url);
+    final response = await http.get(url as Uri);
     if (response.statusCode != 200) {
       print('The app with application id: $applicationId is not found in play store');
       return null;
@@ -102,16 +101,16 @@ class CheckVersion {
     final document = html.parse(response.body);
     final elements = document.getElementsByClassName('hAyfc');
     final versionElement = elements.firstWhere(
-      (elm) => elm.querySelector('.BgcNfc').text == 'Current Version',
+      (elm) => elm.querySelector('.BgcNfc')?.text == 'Current Version',
     );
-    versionStatus.storeVersion = versionElement.querySelector('.htlgb').text;
+    versionStatus.storeVersion = versionElement.querySelector('.htlgb')?.text;
     versionStatus.appStoreUrl = url;
     return versionStatus;
   }
 
   void showUpdaterDialog(
     String appStoreurl, {
-    AppVersionStatus versionStatus,
+    AppVersionStatus? versionStatus,
     String message = "You can now update this app from store.",
     String titleText = 'Update Tersedia',
     String dismissText = 'Tunda',
@@ -166,15 +165,15 @@ class CheckVersion {
                       padding: EdgeInsets.only(bottom: 10),
                     ),
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
-                      RaisedButton(
+                      ElevatedButton(
                         child: dismiss,
                         onPressed: dismissAction,
-                        color: Colors.grey,
+                        //color: Colors.grey,
                       ),
-                      RaisedButton(
+                      ElevatedButton(
                         child: update,
                         onPressed: updateAction,
-                        color: Colors.orange[800],
+                        //color: Colors.orange[800],
                       ),
                     ])
                   ],
@@ -186,9 +185,9 @@ class CheckVersion {
 
   Future _launchAppStore(String appStoreUrl) async {
     if (Platform.isIOS) {
-      await launch(appStoreUrl);
+      await launchUrl(Uri.parse(appStoreUrl));
     } else {
-      await launch(appStoreUrl);
+      await launchUrl(Uri.parse(appStoreUrl));
     }
   }
 }

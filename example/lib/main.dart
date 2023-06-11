@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -43,10 +43,10 @@ class _MyHomePageState extends State<MyHomePage> {
       checkVersion.showUpdaterDialog(
           "https://play.google.com/store/apps/details?id=net.pelita.app&hl=en_AU&gl=US");
     }
-    print("canUpdate ${appStatus.canUpdate}");
-    print("localVersion ${appStatus.localVersion}");
-    print("appStoreLink ${appStatus.appStoreUrl}");
-    print("storeVersion ${appStatus.storeVersion}");
+    print("canUpdate ${appStatus?.canUpdate}");
+    print("localVersion ${appStatus?.localVersion}");
+    print("appStoreLink ${appStatus?.appStoreUrl}");
+    print("storeVersion ${appStatus?.storeVersion}");
   }
 
   void _incrementCounter() {

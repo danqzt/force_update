@@ -1,18 +1,18 @@
 name: forceupdate
 description: This package is use for check new version available both ios and android. If it has a new version, you can link to app store or play store.
-version: 0.0.6
+version: 0.1.0
 homepage: https://github.com/SidaHoil/force_update
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=3.0.1 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  url_launcher:
-  http: ^0.12.1
-  html: ^0.14.0+3
-  package_info: ^0.4.1
+  url_launcher: ^6.1.11
+  http: ^1.0.0
+  html: ^0.15.4
+  package_info_plus: ^4.0.2
 
 dev_dependencies:
   flutter_test:
