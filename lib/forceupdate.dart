@@ -93,19 +93,21 @@ class CheckVersion {
   getAndroidAtStoreVersion(
       String applicationId /**application id, generally stay in build.gradle*/, AppVersionStatus versionStatus) async {
     final url = 'https://play.google.com/store/apps/details?id=$applicationId';
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode != 200) {
-      print('The app with application id: $applicationId is not found in play store');
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode != 200) {
+        print('The app with application id: $applicationId is not found in play store');
+        return null;
+      }
+      final newVersion = RegExp(r',\[\[\["([0-9,\.]*)"]],').firstMatch(response.body)!.group(1);
+
+      versionStatus.storeVersion = newVersion;
+      versionStatus.appStoreUrl = url;
+      return versionStatus;
+    } catch (e) {
       return null;
     }
-    final document = html.parse(response.body);
-    final elements = document.getElementsByClassName('hAyfc');
-    final versionElement = elements.firstWhere(
-      (elm) => elm.querySelector('.BgcNfc')?.text == 'Current Version',
-    );
-    versionStatus.storeVersion = versionElement.querySelector('.htlgb')?.text;
-    versionStatus.appStoreUrl = url;
-    return versionStatus;
   }
 
   void showUpdaterDialog(
