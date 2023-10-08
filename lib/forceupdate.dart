@@ -189,7 +189,7 @@ class CheckVersion {
     if (Platform.isIOS) {
       await launchUrl(Uri.parse(appStoreUrl));
     } else {
-      await launchUrl(Uri.parse(appStoreUrl));
+      await launchUrl(Uri.parse(appStoreUrl), mode: LaunchMode.externalApplication);
     }
   }
 }
